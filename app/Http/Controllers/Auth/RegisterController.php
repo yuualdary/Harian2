@@ -11,6 +11,10 @@ use Illuminate\Support\Facades\Validator;
 use Laravel\Jetstream\Jetstream;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
+// use App\Mail\RegisterMail;
+// use Illuminate\Support\Facades\Mail;
+use App\Events\EventForRegister;
+
 
 
 
@@ -69,7 +73,8 @@ class RegisterController extends Controller
         $GetEmail = $NewUser->email;//unused digunakan buat kirim email nanti
         $GetId = $NewUser->id;
         // $GetName = $NewUser->name;
-        
+        $Name= $NewUser->name;
+
 
          //get initial for otpcode
         //  $GetChar=Str::substr($GetName, 0, 4);
@@ -89,15 +94,14 @@ class RegisterController extends Controller
         $NewOtp->valid_until=$Valid_time;
         $NewOtp->save();
 
+        $OtpCode=$NewUser->otp;
+        $ExpTime=$NewOtp->valid_until;
+
+        // Mail::to($GetEmail)->send(new RegisterMail($Name,$OtpCode,$ExpTime));
+        event(new EventForRegister($Name,$OtpCode,$ExpTime,$GetEmail));
+
+
         return 'Succes Make Account';
-   
-
-
-
-
-        
-
-
         
     }
 

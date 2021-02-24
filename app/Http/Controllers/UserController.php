@@ -36,6 +36,29 @@ class UserController extends Controller
     public function store(Request $request)
     {
         //
+        $CreateUser=user::find(Auth::user()->id);
+
+        
+        
+        if($request->hasfile('profile_photo_path')){
+             $profileImageSaveAsName =Auth::user()->id.time(). "-profile." . $profileImage->getClientOriginalExtension();
+             $upload_path = 'profile_image/';
+             $profile_image_url = $upload_path . $profileImageSaveAsName;
+             $success = $profileImage->move($upload_path, $profileImageSaveAsName);
+        
+             $CreateUser->profile_photo_path = $profile_image_url;
+
+        }
+
+
+        
+
+
+
+
+     
+
+        
     }
 
     /**
